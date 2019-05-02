@@ -1,0 +1,30 @@
+Boston,Chicago,100
+Boston,Dallas,200
+Boston,Trent,80
+San Jose,New York,500
+San Jose,Miami,600
+San Jose,Boston,550
+San Diego,Denver,300
+San Diego,Seattle,250
+San Diego,San Jose,60
+Chicago,Dallas,400
+Chicago,Trent,50
+Chicago,San Diego,200
+New York,Miami,150
+New York,Boston,50
+New York,Chicago,120
+Denver,Seattle,280
+Denver,San Jose,250
+Denver,New York,400
+Trent,San Diego,300
+Trent,Denver,160
+Trent,Seattle,200
+Dallas,Trent,300
+Dallas,San Diego,400
+Dallas,Denver,150
+Miami,Boston,350
+Miami,Dallas,250
+Miami,Chicago,400
+Seattle,San Jose,200
+Seattle,New York,550
+Seattle,Miami,700
