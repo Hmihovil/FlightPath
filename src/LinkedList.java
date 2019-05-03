@@ -28,13 +28,13 @@ public class LinkedList {
 
     private Node locate(int position)
     {
-        Node curr = head;
+        Node cur = head;
         while (position > 1)
         {
-            curr = curr.getNext();
+            cur = cur.getNext();
             position--;
         }
-        return curr;
+        return cur;
     }
 
     public int costAt(int position) throws IndexOutOfBoundsException
@@ -61,5 +61,19 @@ public class LinkedList {
         {
             throw new IndexOutOfBoundsException("Error.  Attempted to retrieve at an invalid index in RetrieveCodeAt()");
         }
+    }
+
+    public int costOfDest(String dest){
+        Node cur = head;
+        if(dest.equalsIgnoreCase(cur.getName())){
+            return 0;
+        }
+        for(int i = 2; i <= numItems; i++){
+            if(dest.equalsIgnoreCase(cur.getName())){
+                return cur.getCost();
+            }
+            cur = cur.getNext();
+        }
+        return Integer.MAX_VALUE;
     }
 }

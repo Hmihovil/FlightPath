@@ -25,6 +25,8 @@ public class FlightPath{
             System.out.println("What city would you like to fly to?");
             String dest = in.nextLine();
 
+            findFlight(start,dest,flights);
+
             System.out.println("Would you like to perform another flight search?");
             repeat = in.nextLine();
 
@@ -54,15 +56,11 @@ public class FlightPath{
 
         System.out.println((int)lineCount);
         LinkedList[] flight = new LinkedList[(int)lineCount];
-        for(int j = 0; j < flight.length; j++){
-            flight[j] = new LinkedList();
-        }
         try{
             BufferedReader freader = new BufferedReader(new FileReader(file));
             for(int i = 0; i < lineCount; i++){
-                String s = freader.readLine();
-                System.out.println(s);
-                flight[i].append(s,0);
+                flight[i] = new LinkedList();
+                flight[i].append(freader.readLine(),0);
             }
         }
         catch(FileNotFoundException e){}
@@ -96,5 +94,72 @@ public class FlightPath{
             }
         }
         return -1;
+    }
+
+    private static int indexUnusedLowestVal(int[] S, int[] D){
+        int min = Integer.MAX_VALUE;
+        int minIndex = 0;
+        for(int i = 1; i <= D.length; i++){
+            boolean inS = false;
+            for(int j = 0; j <= S.length; j++){
+                if(S[j]==i){
+                    inS = true;
+                    break;
+                }
+            }
+            if(inS){
+                continue;
+            }
+            if(D[i] < min){
+                min = D[i];
+                minIndex = i;
+            }
+        }
+
+        return minIndex;
+    }
+
+    private static void findFlight(String a, String b, LinkedList[] ll){
+        int[] S = new int[ll.length+1];
+        int[] D = new int[ll.length+1];
+        int[] P = new int[ll.length+1];
+
+        int source = -1;
+        int dest = -1;
+
+        for(int j = 0; j < ll.length; j++){
+            if(a.equalsIgnoreCase(ll[j].nameAt(1))){
+                source = j;
+            }
+            if(b.equalsIgnoreCase(ll[j].nameAt(1))){
+                dest = j;
+            }
+        }
+        if(source == -1){
+            System.out.println("\nThe entered starting location does not offer any departing flights.");
+            return;
+        }
+        if(source == dest){
+            System.out.println("\nIt doesn't cost anything to stay where you are.");
+            return;
+        }
+
+        S[1] = source;
+        for(int m = 0; m < P.length; m++){
+            P[m] = source;
+        }
+
+        for(int i = 1; i < ll.length+1; i++){
+            D[i] = ll[i].costOfDest(b);
+        }
+        for(int i = 1; i < ll.length+1; i++){
+            int w = indexUnusedLowestVal(S,D);
+            S[i+1] = w;
+
+            for(int j = 1; j <= ll[w-1].listLength(); j++){
+                //pick back up here
+                ll[w-1].nameAt(j);
+            }
+        }
     }
 }
