@@ -68,7 +68,8 @@ public class LinkedList {
         if(dest.equalsIgnoreCase(cur.getName())){
             return 0;
         }
-        for(int i = 2; i <= numItems; i++){
+        //may or may not need to be numItems+1 int the for loop parameters
+        for(int i = 2; i <= numItems+1; i++){
             if(dest.equalsIgnoreCase(cur.getName())){
                 return cur.getCost();
             }

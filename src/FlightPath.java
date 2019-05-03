@@ -96,12 +96,21 @@ public class FlightPath{
         return -1;
     }
 
+    private static boolean sContains(int[] S, int v){
+        for(int i = 0; i < S.length; i++){
+            if(S[i]==v){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static int indexUnusedLowestVal(int[] S, int[] D){
         int min = Integer.MAX_VALUE;
         int minIndex = 0;
-        for(int i = 1; i <= D.length; i++){
+        for(int i = 1; i < D.length; i++){
             boolean inS = false;
-            for(int j = 0; j <= S.length; j++){
+            for(int j = 0; j < S.length; j++){
                 if(S[j]==i){
                     inS = true;
                     break;
@@ -110,7 +119,7 @@ public class FlightPath{
             if(inS){
                 continue;
             }
-            if(D[i] < min){
+            if(D[i] < min && D[i] != 0){
                 min = D[i];
                 minIndex = i;
             }
@@ -134,6 +143,9 @@ public class FlightPath{
             if(b.equalsIgnoreCase(ll[j].nameAt(1))){
                 dest = j;
             }
+            if(source != -1 && dest != -1){
+                break;
+            }
         }
         if(source == -1){
             System.out.println("\nThe entered starting location does not offer any departing flights.");
@@ -144,21 +156,34 @@ public class FlightPath{
             return;
         }
 
-        S[1] = source;
+        S[1] = source+1;
         for(int m = 0; m < P.length; m++){
             P[m] = source;
         }
 
-        for(int i = 1; i < ll.length+1; i++){
-            D[i] = ll[i].costOfDest(b);
+        for(int i = 1; i <= ll.length; i++){
+            D[i] = ll[i-1].costOfDest(b);
         }
         for(int i = 1; i < ll.length+1; i++){
             int w = indexUnusedLowestVal(S,D);
             S[i+1] = w;
 
-            for(int j = 1; j <= ll[w-1].listLength(); j++){
+            for(int j = 2; j <= ll[w-1].listLength(); j++){
                 //pick back up here
-                ll[w-1].nameAt(j);
+                String vName = ll[w-1].nameAt(j);
+                int v = findCity(vName,ll);
+
+                if(!sContains(S,v)){
+                    int test1 = D[v+1];
+                    int test2 = D[w]+ll[w-1].costOfDest(vName);
+                    if(test2 < 0){
+                        test2 = Integer.MAX_VALUE;
+                    }
+                    D[v+1] = Math.min(test1,test2);
+                    if(test2 < test1){
+                        P[v+1] = w;
+                    }
+                }
             }
         }
     }
