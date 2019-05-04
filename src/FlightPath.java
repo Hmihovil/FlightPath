@@ -161,6 +161,7 @@ public class FlightPath{
             P[m] = source;
         }
 
+        //This is probably the issue; find cost from SOURCE to each other destination
         for(int i = 1; i <= ll.length; i++){
             D[i] = ll[i-1].costOfDest(b);
         }
