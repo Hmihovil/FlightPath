@@ -119,7 +119,9 @@ public class FlightPath{
             if(inS){
                 continue;
             }
-            if(D[i] < min && D[i] != 0){
+            //may need to be <= in order to prevent w from returning as 0 when all remaining values are MAX_VALUE
+            //may not need the " && D[i] != 0" parameter to avoid values of 0
+            if(D[i] <= min){
                 min = D[i];
                 minIndex = i;
             }
@@ -138,10 +140,10 @@ public class FlightPath{
 
         for(int j = 0; j < ll.length; j++){
             if(a.equalsIgnoreCase(ll[j].nameAt(1))){
-                source = j;
+                source = j+1;
             }
             if(b.equalsIgnoreCase(ll[j].nameAt(1))){
-                dest = j;
+                dest = j+1;
             }
             if(source != -1 && dest != -1){
                 break;
@@ -156,17 +158,18 @@ public class FlightPath{
             return;
         }
 
-        S[1] = source+1;
+        S[0] = source;
         for(int m = 0; m < P.length; m++){
+            //was originally preset to be "P[m] = source" but may need to have the array fully initialized with the source values
             P[m] = source;
         }
 
         for(int i = 1; i <= ll.length; i++){
             D[i] = ll[i-1].costOfDest(b);
         }
-        for(int i = 1; i < ll.length+1; i++){
+        for(int i = 1; i < ll.length; i++){
             int w = indexUnusedLowestVal(S,D);
-            S[i+1] = w;
+            S[i] = w;
 
             for(int j = 2; j <= ll[w-1].listLength(); j++){
                 //pick back up here
