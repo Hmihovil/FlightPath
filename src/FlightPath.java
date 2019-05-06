@@ -166,6 +166,7 @@ public class FlightPath{
 
         //This is probably the issue; find cost from SOURCE to each other destination
         for(int i = 1; i <= ll.length; i++){
+            //May not need to be initialized at all
             D[i] = ll[i-1].costOfDest(b);
         }
         for(int i = 1; i < ll.length; i++){
