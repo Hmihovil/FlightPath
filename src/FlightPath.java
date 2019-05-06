@@ -87,6 +87,28 @@ public class FlightPath{
         return flight;
     }
 
+    private static void backtrack(int[] P, int source, int dest, LinkedList[] ll){
+        ArrayList<Integer> flightpath = new ArrayList<Integer>();
+
+        boolean notDone = true;
+        int temp = source;
+        int cost = 0;
+        while(notDone){
+            flightpath.add(P[temp]);
+            if((temp = P[temp]) == dest){
+                notDone = false;
+            }
+        }
+
+        for(int i = flightpath.size()-1; i > 0; i--){
+            int tempCost = ll[flightpath.get(i-1)-1].costOfDest(ll[flightpath.get(i-1)].nameAt(1));
+            System.out.println("Flight from " + ll[flightpath.get(i-1)-1].nameAt(1) + " to " + ll[flightpath.get(i)-1].nameAt(1) + " \tCost: $" + tempCost);
+            cost += tempCost;
+        }
+
+        System.out.println("Total Cost................................ $" + cost);
+    }
+
     private static int findCity(String c, LinkedList[] f){
         for(int i = 0; i < f.length; i++){
             if(c.equals(f[i].nameAt(1))){
@@ -149,6 +171,7 @@ public class FlightPath{
                 break;
             }
         }
+
         if(source == -1){
             System.out.println("\nThe entered starting location does not offer any departing flights.");
             return;
@@ -158,37 +181,34 @@ public class FlightPath{
             return;
         }
 
-        S[0] = source;
-        for(int m = 0; m < P.length; m++){
-            //was originally preset to be "P[m] = source" but may need to have the array fully initialized with the source values
-            P[m] = source;
-        }
-
-        //This is probably the issue; find cost from SOURCE to each other destination
         for(int i = 1; i <= ll.length; i++){
-            D[i] = ll[i-1].costOfDest(b);
+            D[i] = Integer.MAX_VALUE;
         }
+        D[source] = 0;
         for(int i = 1; i < ll.length; i++){
             int w = indexUnusedLowestVal(S,D);
             S[i] = w;
 
             for(int j = 2; j <= ll[w-1].listLength(); j++){
-                //pick back up here
                 String vName = ll[w-1].nameAt(j);
                 int v = findCity(vName,ll);
 
-                if(!sContains(S,v)){
+                if(!sContains(S,v+1)){
                     int test1 = D[v+1];
                     int test2 = D[w]+ll[w-1].costOfDest(vName);
                     if(test2 < 0){
                         test2 = Integer.MAX_VALUE;
                     }
-                    D[v+1] = Math.min(test1,test2);
+
                     if(test2 < test1){
+                        D[v+1] = test2;
                         P[v+1] = w;
                     }
                 }
             }
         }
+        System.out.print(P);
+
+        //using backtrack within the method- an attempt
     }
 }
