@@ -1,42 +1,63 @@
+/*
+Scott Spinali
+Shaydon Bodemar
+
+
+
+5 - 6 - 2019
+ */
+
 import java.util.*;
 import java.nio.file.*;
 import java.io.*;
 
 public class FlightPath{
     public static void main(String[] args) {
-
         Scanner in = new Scanner(System.in);
-        System.out.println("\nWelcome to the flight searcher!\nThank you for choosing USAir.");
-
-        System.out.println("\nWhat is the name of the cityFile?");
-        String cityFile = in.nextLine();
-        System.out.println("What is the name of the flightFile?");
-        String flightFile = in.nextLine();
-        LinkedList[] flights = cityReader(cityFile);
-        flights = flightReader(flights,flightFile);
-
-        System.out.println(flights);
-
-        String repeat;
-
+        String newFiles = null;
         do {
-            System.out.println("\nWhat city would you like to depart from?");
-            String start = in.nextLine();
-            System.out.println("What city would you like to fly to?");
-            String dest = in.nextLine();
+            System.out.println("\n\n\nWelcome to the flight searcher!\nThank you for choosing USAir.");
+            System.out.println("\nWhat is the name of the cityFile?");
+            String cityFile = in.nextLine();
+            System.out.println("What is the name of the flightFile?");
+            String flightFile = in.nextLine();
+            LinkedList[] flights = cityReader(cityFile);
+            if(flights != null){
+                flights = flightReader(flights, flightFile);
+            }
+            else{
+                newFiles = "y";
+                continue;
+            }
+            if (flights != null) {
+                String repeat = null;
+                do {
+                    System.out.println("\nWhat city would you like to depart from?");
+                    String start = in.nextLine();
+                    System.out.println("What city would you like to fly to?");
+                    String dest = in.nextLine();
 
-            findFlight(start,dest,flights);
+                    findFlight(start, dest, flights);
 
-            System.out.println("\nWould you like to perform another flight search?");
-            repeat = in.nextLine();
+                    System.out.println("\nWould you like to perform another flight search? (Say no if you'd like to exit or enter new files.)");
+                    repeat = in.nextLine();
 
-        }while(willRepeat(repeat));
-
-        System.out.println("\nThank you for searching, please come again.");
+                } while (willRepeat(repeat));
+            }
+            else{
+                continue;
+            }
+            System.out.println("Would you like to enter new files for searching?");
+            newFiles = in.nextLine();
+        }while(willRepeat(newFiles));
+        System.out.println("\nThank you for your interest in USAir, please come again.");
     }
 
     private static boolean willRepeat(String userEntry){
-        if(userEntry.equalsIgnoreCase("y")|userEntry.equalsIgnoreCase("yes")|userEntry.substring(0,1).equalsIgnoreCase("y")){
+        if(userEntry == null){
+            return false;
+        }
+        else if(userEntry.equalsIgnoreCase("y")|userEntry.equalsIgnoreCase("yes")|userEntry.substring(0,1).equalsIgnoreCase("y")){
             return true;
         }
         else{
@@ -62,9 +83,14 @@ public class FlightPath{
                 flight[i].append(freader.readLine(),0);
             }
         }
-        catch(FileNotFoundException e){}
-        catch(IOException e){}
-
+        catch(FileNotFoundException e){
+            System.out.println("City file could not be found.");
+            return null;
+        }
+        catch(IOException e){
+            System.out.println("City file format is incorrect.");
+            return null;
+        }
         return flight;
     }
 
@@ -82,11 +108,19 @@ public class FlightPath{
                 flight[location].append(temp[1], Integer.parseInt(temp[2]));
             }
         }
-        catch(IOException e){}
+        catch(FileNotFoundException e){
+            System.out.println("\nFlight file could not be found.");
+            return null;
+        }
+        catch(IOException e){
+            System.out.println("\nFlight file format is incorrect.");
+            return null;
+        }
         return flight;
     }
 
     private static void backtrack(int[] P, int source, int dest, LinkedList[] ll){
+        System.out.println("");
         boolean notDone = true;
         int length = 1;
         int temp = dest;
@@ -113,7 +147,6 @@ public class FlightPath{
             System.out.println("Flight from " + ll[flightpath[i-1]-1].nameAt(1) + " to " + ll[flightpath[i]-1].nameAt(1) + " \tCost: $" + tempCost);
             cost += tempCost;
         }
-
         System.out.println("Total Cost................................ $" + cost);
     }
 
@@ -149,14 +182,11 @@ public class FlightPath{
             if(inS){
                 continue;
             }
-            //may need to be <= in order to prevent w from returning as 0 when all remaining values are MAX_VALUE
-            //may not need the " && D[i] != 0" parameter to avoid values of 0
             if(D[i] <= min){
                 min = D[i];
                 minIndex = i;
             }
         }
-
         return minIndex;
     }
 
@@ -181,15 +211,15 @@ public class FlightPath{
         }
 
         if(source == -1){
-            System.out.println("\nUSAir does not offer any departing flights from the entered origin.");
+            System.out.println("\nUSAir does not offer any departing flights from " + a + ".");
             return;
         }
         if(dest == -1){
-            System.out.println("\nUSAir does not offer any flights to the entered destination.");
+            System.out.println("\nUSAir does not offer any flights to " + b + ".");
             return;
         }
         if(source == dest){
-            System.out.println("\nIt doesn't cost anything to stay where you are.");
+            System.out.println("\nIt doesn't cost anything to stay in " + a + ".");
             return;
         }
 
@@ -219,8 +249,6 @@ public class FlightPath{
                 }
             }
         }
-        System.out.print(P);
-
         backtrack(P,source,dest,ll);
     }
 }
