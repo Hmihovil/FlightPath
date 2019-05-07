@@ -27,7 +27,7 @@ public class FlightPath{
 
             findFlight(start,dest,flights);
 
-            System.out.println("Would you like to perform another flight search?");
+            System.out.println("\nWould you like to perform another flight search?");
             repeat = in.nextLine();
 
         }while(willRepeat(repeat));
@@ -54,7 +54,6 @@ public class FlightPath{
         }
         catch(IOException e){}
 
-        System.out.println((int)lineCount);
         LinkedList[] flight = new LinkedList[(int)lineCount];
         try{
             BufferedReader freader = new BufferedReader(new FileReader(file));
@@ -88,21 +87,30 @@ public class FlightPath{
     }
 
     private static void backtrack(int[] P, int source, int dest, LinkedList[] ll){
-        ArrayList<Integer> flightpath = new ArrayList<Integer>();
-
         boolean notDone = true;
-        int temp = source;
+        int length = 1;
+        int temp = dest;
         int cost = 0;
         while(notDone){
-            flightpath.add(P[temp]);
-            if((temp = P[temp]) == dest){
+            length++;
+            if(P[temp] == source){
                 notDone = false;
+            }
+            else{
+                temp = P[temp];
             }
         }
 
-        for(int i = flightpath.size()-1; i > 0; i--){
-            int tempCost = ll[flightpath.get(i-1)-1].costOfDest(ll[flightpath.get(i-1)].nameAt(1));
-            System.out.println("Flight from " + ll[flightpath.get(i-1)-1].nameAt(1) + " to " + ll[flightpath.get(i)-1].nameAt(1) + " \tCost: $" + tempCost);
+        int[] flightpath = new int[length];
+        temp = dest;
+        for(int i = flightpath.length-1; i >= 0; i--){
+            flightpath[i] = temp;
+            temp = P[temp];
+        }
+
+        for(int i = 1; i < flightpath.length; i++){
+            int tempCost = ll[flightpath[i-1]-1].costOfDest(ll[flightpath[i]-1].nameAt(1));
+            System.out.println("Flight from " + ll[flightpath[i-1]-1].nameAt(1) + " to " + ll[flightpath[i]-1].nameAt(1) + " \tCost: $" + tempCost);
             cost += tempCost;
         }
 
@@ -173,7 +181,11 @@ public class FlightPath{
         }
 
         if(source == -1){
-            System.out.println("\nThe entered starting location does not offer any departing flights.");
+            System.out.println("\nUSAir does not offer any departing flights from the entered origin.");
+            return;
+        }
+        if(dest == -1){
+            System.out.println("\nUSAir does not offer any flights to the entered destination.");
             return;
         }
         if(source == dest){
@@ -209,6 +221,6 @@ public class FlightPath{
         }
         System.out.print(P);
 
-        //using backtrack within the method- an attempt
+        backtrack(P,source,dest,ll);
     }
 }
