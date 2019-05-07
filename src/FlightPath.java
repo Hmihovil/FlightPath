@@ -2,7 +2,8 @@
 Scott Spinali
 Shaydon Bodemar
 
-
+Program that determines the cheapest flight from a given source to a given destination,
+using files fed in by the user.
 
 5 - 6 - 2019
  */
@@ -51,7 +52,7 @@ public class FlightPath{
             newFiles = in.nextLine();
         }while(willRepeat(newFiles));
         System.out.println("\nThank you for your interest in USAir, please come again.");
-    }
+    }//main method which handles the passing of values around to the primary file reading and data handler methods, and the UI
 
     private static boolean willRepeat(String userEntry){
         if(userEntry == null){
@@ -63,7 +64,7 @@ public class FlightPath{
         else{
             return false;
         }
-    }
+    }//determines if the user-input String indicated a desire to repeat the loop
 
     private static LinkedList[] cityReader(String cityFile){
         long lineCount = 0;
@@ -92,7 +93,7 @@ public class FlightPath{
             return null;
         }
         return flight;
-    }
+    }//reads the city file and returns the LinkedList array with all the origin locations set
 
     private static LinkedList[] flightReader(LinkedList[] flight, String flightFile){
         File file = new File(flightFile);
@@ -117,7 +118,7 @@ public class FlightPath{
             return null;
         }
         return flight;
-    }
+    }//reads the flight file and returns the LinkedList array with all outgoing flights included for every origin
 
     private static void backtrack(int[] P, int source, int dest, LinkedList[] ll){
         System.out.println("");
@@ -148,7 +149,7 @@ public class FlightPath{
             cost += tempCost;
         }
         System.out.println("Total Cost................................ $" + cost);
-    }
+    }//goes backwards through the P array once it is complete and finds then prints the path from source to dest
 
     private static int findCity(String c, LinkedList[] f){
         for(int i = 0; i < f.length; i++){
@@ -157,7 +158,7 @@ public class FlightPath{
             }
         }
         return -1;
-    }
+    }//finds the location of origin cities, and returns -1 if not present
 
     private static boolean sContains(int[] S, int v){
         for(int i = 0; i < S.length; i++){
@@ -166,7 +167,7 @@ public class FlightPath{
             }
         }
         return false;
-    }
+    }//determines if the vertex has been places in S[] yet
 
     private static int indexUnusedLowestVal(int[] S, int[] D){
         int min = Integer.MAX_VALUE;
@@ -188,7 +189,7 @@ public class FlightPath{
             }
         }
         return minIndex;
-    }
+    }//finds the cheapest flight from the source that has not yet been determined (put in S[])
 
     private static void findFlight(String a, String b, LinkedList[] ll){
         int[] S = new int[ll.length+1];
@@ -250,5 +251,5 @@ public class FlightPath{
             }
         }
         backtrack(P,source,dest,ll);
-    }
+    }//using Dijkstra's algorithm, finds the cheapest path to each of the possible destinations from the given source
 }
