@@ -126,6 +126,8 @@ public class FlightPath{
         int length = 1;
         int temp = dest;
         int cost = 0;
+
+        //have a looping condition to break out of this loop if there are cycles
         while(notDone){
             length++;
             if(P[temp] == source){

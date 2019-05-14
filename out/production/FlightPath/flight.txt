@@ -28,3 +28,5 @@ Miami,Chicago,400
 Seattle,San Jose,200
 Seattle,New York,550
 Seattle,Miami,700
+Guadalajara,Monterey,200
+Monterey,Guadalajara,200

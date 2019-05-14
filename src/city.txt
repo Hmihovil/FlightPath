@@ -8,3 +8,5 @@ Dallas
 Miami
 Seattle
 Trent
+Monterey
+Guadalajara
